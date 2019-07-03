@@ -174,7 +174,7 @@
                         <goals>
                             <goal>reserve-network-port</goal>
                         </goals>
-                        <phase>process-resources</phase>
+                        <phase>pre-integration-test</phase>
                         <configuration>
                             <portNames>
                                 <portName>random.wiremock.port</portName>
@@ -193,11 +193,6 @@
                         <goals>
                             <goal>start</goal>
                         </goals>
-                        <configuration>
-                            <arguments>
-                                <argument>--random.wiremock.port=${random.wiremock.port}</argument>
-                            </arguments>
-                        </configuration>
                     </execution>
                     <execution>
                         <id>post-integration-test</id>
@@ -208,7 +203,7 @@
                 </executions>
             </plugin>
             
-            <plugin>
+            <!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
@@ -216,11 +211,31 @@
                         <test.server.port>${tomcat.http.port}</test.server.port>
                     </systemPropertyVariables>
                 </configuration>
-            </plugin>
-             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
+            </plugin>-->
+            <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.0</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <random.wiremock.port>${random.wiremock.port}</random.wiremock.port>
+                    </systemPropertyVariables>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>none</exclude>
+                            </excludes>
+                            <includes>
+                                <include>**/*IT</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>

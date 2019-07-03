@@ -22,11 +22,11 @@ import se.havero.sater.wiremock.model.Note;
  * @author johan
  */
 @Component
-class NoteClient {
+public class NoteClient {
 
     private WebTarget webTarget;
     @Value("${note.service.url}")
-    String noteServiceUrl;
+    private String noteServiceUrl;
     private static final Logger LOG = LoggerFactory.getLogger(NoteClient.class);
 
     public Note getNote(String id) {
@@ -35,7 +35,7 @@ class NoteClient {
       
         Response response = ClientBuilder
                 .newClient()
-                .target("http://localhost:8080/note/{id}")
+                .target(noteServiceUrl)
                 .resolveTemplate("id", id)
                 .request(MediaType.APPLICATION_JSON).get();
         
